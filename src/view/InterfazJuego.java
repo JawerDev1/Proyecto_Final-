@@ -102,17 +102,18 @@ public class InterfazJuego extends JFrame {
         JButton btn = new JButton(texto);
         btn.setFocusPainted(false);
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btn.setBackground(new Color(230, 230, 230));
+        // tono beige que combina con el pergamino
+        btn.setBackground(new Color(230, 220, 190));
         btn.setForeground(Color.BLACK);
         btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn.setBackground(new Color(210, 210, 210));
+                btn.setBackground(new Color(210, 200, 170));
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn.setBackground(new Color(230, 230, 230));
+                btn.setBackground(new Color(230, 220, 190));
             }
         });
 
@@ -162,6 +163,10 @@ public class InterfazJuego extends JFrame {
     // INTERFAZ
     private void inicializarInterfaz() {
 
+        // Paleta de colores tipo pergamino
+        Color beigeClaro = new Color(240, 226, 195);
+        Color beigeSuave = new Color(250, 245, 230);
+
         JPanel panelCentral = new JPanel(new BorderLayout());
 
         // Campo de batalla
@@ -169,13 +174,14 @@ public class InterfazJuego extends JFrame {
         panelCampoBatalla.setPreferredSize(new Dimension(900, 350));
         panelCampoBatalla.setBorder(BorderFactory.createTitledBorder("Campo de batalla"));
         panelCampoBatalla.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 30));
+        panelCampoBatalla.setBackground(beigeSuave);
         panelCentral.add(panelCampoBatalla, BorderLayout.NORTH);
 
         // ======= CONSOLA =======
         areaTexto = new JTextArea();
         areaTexto.setEditable(false);
         areaTexto.setFont(new Font("Consolas", Font.PLAIN, 15));
-        areaTexto.setBackground(new Color(250, 250, 245));
+        areaTexto.setBackground(beigeSuave);      // antes casi blanco, ahora papel suave
         areaTexto.setForeground(new Color(60, 60, 60));
         areaTexto.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -184,9 +190,11 @@ public class InterfazJuego extends JFrame {
         scroll.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(180, 180, 180), 2, true),
                 "Registro de batalla"));
+        scroll.getViewport().setBackground(beigeSuave);
+        scroll.setBackground(beigeClaro);
 
         JPanel panelConsola = new JPanel(new BorderLayout());
-        panelConsola.setBackground(new Color(240, 240, 240));
+        panelConsola.setBackground(beigeClaro);   // antes gris, ahora beige
         panelConsola.add(scroll, BorderLayout.CENTER);
 
         panelCentral.add(panelConsola, BorderLayout.SOUTH);
@@ -196,7 +204,7 @@ public class InterfazJuego extends JFrame {
         JPanel panelDerecho = new JPanel();
         panelDerecho.setLayout(new GridLayout(10, 1, 5, 10));
         panelDerecho.setPreferredSize(new Dimension(180, 600));
-        panelDerecho.setBackground(new Color(245, 245, 245));
+        panelDerecho.setBackground(beigeClaro);   // antes gris, ahora beige
         panelDerecho.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(160, 160, 160), 2, true),
                 "Opciones"));
@@ -217,7 +225,7 @@ public class InterfazJuego extends JFrame {
         // ======= PANEL DE ACCIONES =======
         JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
         panelAcciones.setPreferredSize(new Dimension(900, 80));
-        panelAcciones.setBackground(new Color(250, 250, 250));
+        panelAcciones.setBackground(beigeSuave); // antes blanco, ahora tono pergamino
         panelAcciones.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(180, 180, 180), 2, true),
                 "Acciones"));
@@ -262,7 +270,9 @@ public class InterfazJuego extends JFrame {
 
     }
 
-    // BOTONES ENEMIGOS
+    // ============================================================
+    //      BOTONES ENEMIGOS: PERGAMINO ARRIBA (HP) Y ABAJO (NOMBRE)
+    // ============================================================
     private void actualizarBotonesEnemigos() {
 
         panelCampoBatalla.removeAll();
@@ -281,23 +291,74 @@ public class InterfazJuego extends JFrame {
                 ImageIcon icono = null;
                 try {
                     icono = new ImageIcon(getClass().getResource(ruta));
-
                     Image imagenEscalada = icono.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                     icono = new ImageIcon(imagenEscalada);
                 } catch (Exception ex) {
                     System.err.println("Error al cargar imagen para " + e.getNombre() + ": " + ex.getMessage());
                 }
 
-                JButton btn = new JButton("<html>HP: " + e.getHp() + "</html>", icono);
-
+                // ===== BOTÓN DEL ENEMIGO (solo imagen) =====
+                JButton btn = new JButton("", icono);
                 btn.setVerticalTextPosition(SwingConstants.BOTTOM);
                 btn.setHorizontalTextPosition(SwingConstants.CENTER);
-
-                btn.setPreferredSize(new Dimension(130, 130));
+                btn.setPreferredSize(new Dimension(120, 120));
+                btn.setOpaque(false);
+                btn.setContentAreaFilled(false);
+                btn.setBorderPainted(false);
 
                 btn.addActionListener(ev -> listaEnemigos.setSelectedIndex(index));
 
-                panelCampoBatalla.add(btn);
+                // ===== CONTENEDOR PRINCIPAL =====
+                JPanel contenedor = new JPanel(new BorderLayout());
+                contenedor.setOpaque(false);
+                contenedor.setPreferredSize(new Dimension(130, 220));
+
+                // ========= PERGAMINO SUPERIOR (HP) =========
+                JPanel pergaminoHP = new JPanel(null) {
+                    @Override
+                    protected void paintComponent(Graphics g) {
+                        super.paintComponent(g);
+                        Image img = new ImageIcon(
+                                getClass().getResource("/img/Pergamino.png")
+                        ).getImage();
+                        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+                    }
+                };
+                pergaminoHP.setOpaque(false);
+                pergaminoHP.setPreferredSize(new Dimension(130, 40));
+
+                JLabel textoHP = new JLabel("HP: " + e.getHp(), SwingConstants.CENTER);
+                textoHP.setFont(new Font("Serif", Font.BOLD, 14));
+                textoHP.setForeground(new Color(70, 20, 10));
+                textoHP.setBounds(0, 0, 130, 40);
+                pergaminoHP.add(textoHP);
+
+                // ========= PERGAMINO INFERIOR (NOMBRE) =========
+                JPanel pergaminoNombre = new JPanel(null) {
+                    @Override
+                    protected void paintComponent(Graphics g) {
+                        super.paintComponent(g);
+                        Image img = new ImageIcon(
+                                getClass().getResource("/img/Pergamino.png")
+                        ).getImage();
+                        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+                    }
+                };
+                pergaminoNombre.setOpaque(false);
+                pergaminoNombre.setPreferredSize(new Dimension(130, 40));
+
+                JLabel nombreEnemigo = new JLabel(e.getNombre(), SwingConstants.CENTER);
+                nombreEnemigo.setFont(new Font("Serif", Font.BOLD, 15));
+                nombreEnemigo.setForeground(new Color(40, 20, 5));
+                nombreEnemigo.setBounds(0, 0, 130, 40);
+                pergaminoNombre.add(nombreEnemigo);
+
+                // ORDEN: HP → IMAGEN → NOMBRE
+                contenedor.add(pergaminoHP, BorderLayout.NORTH);
+                contenedor.add(btn, BorderLayout.CENTER);
+                contenedor.add(pergaminoNombre, BorderLayout.SOUTH);
+
+                panelCampoBatalla.add(contenedor);
                 idxVisible++;
             }
         }
