@@ -164,76 +164,81 @@ public class InterfazJuego extends JFrame {
 
         JPanel panelCentral = new JPanel(new BorderLayout());
 
-        // Campo de batalla
-        panelCampoBatalla = new BackgroundPanel("/img/campo-batalla.png");
-        panelCampoBatalla.setPreferredSize(new Dimension(900, 350));
-        panelCampoBatalla.setBorder(BorderFactory.createTitledBorder("Campo de batalla"));
-        panelCampoBatalla.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 30));
-        panelCentral.add(panelCampoBatalla, BorderLayout.NORTH);
+// Campo de batalla
+    panelCampoBatalla = new BackgroundPanel("/img/campo-batalla.png");
+    panelCampoBatalla.setPreferredSize(new Dimension(900, 350));
+    panelCampoBatalla.setBorder(BorderFactory.createTitledBorder("Campo de batalla"));
+    panelCampoBatalla.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 30));
+    panelCentral.add(panelCampoBatalla, BorderLayout.NORTH);
 
-        // ======= CONSOLA =======
-        areaTexto = new JTextArea();
-        areaTexto.setEditable(false);
-        areaTexto.setFont(new Font("Consolas", Font.PLAIN, 15));
-        areaTexto.setBackground(new Color(250, 250, 245));
-        areaTexto.setForeground(new Color(60, 60, 60));
-        areaTexto.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    // ======= CONSOLA =======
+    areaTexto = new JTextArea();
+    areaTexto.setEditable(false);
+    areaTexto.setFont(new Font("Consolas", Font.PLAIN, 15));
+    // Conservamos un color claro para el texto para facilitar la lectura,
+    // o puedes oscurecerlo y cambiar el texto a blanco (ver nota arriba).
+    areaTexto.setBackground(new Color(250, 250, 245)); 
+    areaTexto.setForeground(new Color(60, 60, 60));
+    areaTexto.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JScrollPane scroll = new JScrollPane(areaTexto);
-        scroll.setPreferredSize(new Dimension(900, 180));
-        scroll.setBorder(BorderFactory.createTitledBorder(
+    JScrollPane scroll = new JScrollPane(areaTexto);
+    scroll.setPreferredSize(new Dimension(900, 180));
+    scroll.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(180, 180, 180), 2, true),
                 "Registro de batalla"));
 
-        JPanel panelConsola = new JPanel(new BorderLayout());
-        panelConsola.setBackground(new Color(240, 240, 240));
-        panelConsola.add(scroll, BorderLayout.CENTER);
+    JPanel panelConsola = new JPanel(new BorderLayout());
+    // CAMBIO DE COLOR 1: Fondo de Consola (Gris medio/oscuro)
+    panelConsola.setBackground(new Color(180, 180, 180)); 
+    panelConsola.add(scroll, BorderLayout.CENTER);
 
-        panelCentral.add(panelConsola, BorderLayout.SOUTH);
-        add(panelCentral, BorderLayout.CENTER);
+    panelCentral.add(panelConsola, BorderLayout.SOUTH);
+    add(panelCentral, BorderLayout.CENTER);
 
-        // ======= PANEL DERECHO =======
-        JPanel panelDerecho = new JPanel();
-        panelDerecho.setLayout(new GridLayout(10, 1, 5, 10));
-        panelDerecho.setPreferredSize(new Dimension(180, 600));
-        panelDerecho.setBackground(new Color(245, 245, 245));
-        panelDerecho.setBorder(BorderFactory.createTitledBorder(
+    // ======= PANEL DERECHO =======
+    JPanel panelDerecho = new JPanel();
+    panelDerecho.setLayout(new GridLayout(10, 1, 5, 10));
+    panelDerecho.setPreferredSize(new Dimension(180, 600));
+    // CAMBIO DE COLOR 2: Fondo de Opciones (Tono beige/pergamino)
+    panelDerecho.setBackground(new Color(210, 200, 180)); 
+    panelDerecho.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(160, 160, 160), 2, true),
                 "Opciones"));
 
-        // Botones del panel derecho
-        btnDeshacer = crearBotonSecundario("DESHACER");
-        btnRehacer = crearBotonSecundario("REHACER");
-        btnGuardar = crearBotonSecundario("GUARDAR");
-        JButton btnSalir = crearBotonPeligro("SALIR");
+    // ... Botones del panel derecho (el resto del código se mantiene)
+    btnDeshacer = crearBotonSecundario("DESHACER");
+    btnRehacer = crearBotonSecundario("REHACER");
+    btnGuardar = crearBotonSecundario("GUARDAR");
+    JButton btnSalir = crearBotonPeligro("SALIR");
 
-        panelDerecho.add(btnDeshacer);
-        panelDerecho.add(btnRehacer);
-        panelDerecho.add(btnGuardar);
-        panelDerecho.add(btnSalir);
+    panelDerecho.add(btnDeshacer);
+    panelDerecho.add(btnRehacer);
+    panelDerecho.add(btnGuardar);
+    panelDerecho.add(btnSalir);
 
-        add(panelDerecho, BorderLayout.EAST);
+    add(panelDerecho, BorderLayout.EAST);
 
-        // ======= PANEL DE ACCIONES =======
-        JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
-        panelAcciones.setPreferredSize(new Dimension(900, 80));
-        panelAcciones.setBackground(new Color(250, 250, 250));
-        panelAcciones.setBorder(BorderFactory.createTitledBorder(
+    // ======= PANEL DE ACCIONES =======
+    JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
+    panelAcciones.setPreferredSize(new Dimension(900, 80));
+    // CAMBIO DE COLOR 3: Fondo de Acciones (Azul-gris oscuro)
+    panelAcciones.setBackground(new Color(45, 55, 75)); 
+    panelAcciones.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(180, 180, 180), 2, true),
                 "Acciones"));
 
-        // Botones principales
-        btnAtacar = crearBotonPrincipal("ATACAR");
-        btnDefender = crearBotonPrincipal("DEFENDER");
-        btnHabilidad = crearBotonPrincipal("HABILIDAD");
-        btnObjeto = crearBotonPrincipal("OBJETO");
+    // ... Botones principales (el resto del código se mantiene)
+    btnAtacar = crearBotonPrincipal("ATACAR");
+    btnDefender = crearBotonPrincipal("DEFENDER");
+    btnHabilidad = crearBotonPrincipal("HABILIDAD");
+    btnObjeto = crearBotonPrincipal("OBJETO");
 
-        panelAcciones.add(btnAtacar);
-        panelAcciones.add(btnDefender);
-        panelAcciones.add(btnHabilidad);
-        panelAcciones.add(btnObjeto);
+    panelAcciones.add(btnAtacar);
+    panelAcciones.add(btnDefender);
+    panelAcciones.add(btnHabilidad);
+    panelAcciones.add(btnObjeto);
 
-        add(panelAcciones, BorderLayout.SOUTH);
+    add(panelAcciones, BorderLayout.SOUTH);
 
         // ======= EVENTOS =======
         btnAtacar.addActionListener(e -> realizarAtaque(false));
