@@ -8,7 +8,8 @@ public class BackgroundPanel extends JPanel {
     private Image background;
 
     public BackgroundPanel(String rutaImagen) {
-        background = new ImageIcon(rutaImagen).getImage();
+        // Cargar imagen desde recursos dentro de src
+        background = new ImageIcon(getClass().getResource(rutaImagen)).getImage();
         setLayout(null);
     }
 

@@ -12,11 +12,11 @@ public class MenuPrincipal extends JFrame {
 
     private int indiceSeleccionado = 0;
     private String[] opciones = {
-            "Iniciar Batalla",
-            "Cargar Partida",
-            "Historial de Batallas",
-            "Gremio de Aventureros",
-            "Salir"
+            "▶ Iniciar Batalla",
+            "📂 Cargar Partida",
+            "📜 Historial de Batallas",
+            "⚔️ Gremio de Aventureros",
+            "✖ Salir"
     };
 
     public MenuPrincipal() {
@@ -30,16 +30,14 @@ public class MenuPrincipal extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
-        BackgroundPanel fondo = new BackgroundPanel("img/menu1.jpg");
+        BackgroundPanel fondo = new BackgroundPanel("/img/menu1.jpg");
         setContentPane(fondo);
-
 
         MenuPanel menuPanel = new MenuPanel();
         menuPanel.setOpaque(false);
         setLayout(null);
 
-        menuPanel.setBounds(180, 120, 350, 300); 
+        menuPanel.setBounds(180, 120, 350, 300);
         add(menuPanel);
 
         configurarControles(menuPanel);

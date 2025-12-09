@@ -46,6 +46,7 @@ public class ControladorJuego {
             throws PersonajeMuertoException, ObjetivoInvalidoException, SinMPException {
 
         turnos++;
+        
 
         if (iHeroe < 0 || iHeroe >= heroes.size())
             throw new ObjetivoInvalidoException("Indice de heroe invalido.");

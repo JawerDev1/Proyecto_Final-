@@ -1,4 +1,4 @@
-  package view;
+package view;
 
 import controller.ControladorJuego;
 import model.*;
@@ -24,7 +24,17 @@ public class InterfazJuego extends JFrame {
 
     private int indiceHeroeActual = 0;
 
-    private JPanel panelCampoBatalla;
+    private BackgroundPanel panelCampoBatalla;
+
+    private Musica musicaInicio = new Musica();
+
+    private void iniciarMusicaBatalla() {
+        musicaInicio.reproducirLoop("/sonidos/intro.wav");
+    }
+
+    private void detenerMusica() {
+        musicaInicio.parar();
+    }
 
     // NUEVA PARTIDA
     public InterfazJuego() {
@@ -41,6 +51,8 @@ public class InterfazJuego extends JFrame {
         actualizarListaEnemigos();
         actualizarBotonesEnemigos();
         actualizarTurnoActual();
+
+        iniciarMusicaBatalla();
     }
 
     // PARTIDA CARGADA
@@ -61,6 +73,71 @@ public class InterfazJuego extends JFrame {
         actualizarListaEnemigos();
         actualizarBotonesEnemigos();
         actualizarTurnoActual();
+
+        iniciarMusicaBatalla();
+    }
+
+    private JButton crearBotonPrincipal(String texto) {
+        JButton btn = new JButton(texto);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setBackground(new Color(50, 120, 220));
+        btn.setForeground(Color.WHITE);
+        btn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        // Efecto hover
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(30, 100, 200));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(50, 120, 220));
+            }
+        });
+        return btn;
+    }
+
+    private JButton crearBotonSecundario(String texto) {
+        JButton btn = new JButton(texto);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btn.setBackground(new Color(230, 230, 230));
+        btn.setForeground(Color.BLACK);
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(210, 210, 210));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(230, 230, 230));
+            }
+        });
+
+        return btn;
+    }
+
+    private JButton crearBotonPeligro(String texto) {
+        JButton btn = new JButton(texto);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setBackground(new Color(200, 50, 50));
+        btn.setForeground(Color.WHITE);
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(170, 30, 30));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(200, 50, 50));
+            }
+        });
+
+        return btn;
     }
 
     // DATOS INICIALES
@@ -88,40 +165,47 @@ public class InterfazJuego extends JFrame {
         JPanel panelCentral = new JPanel(new BorderLayout());
 
         // Campo de batalla
-        panelCampoBatalla = new JPanel();
+        panelCampoBatalla = new BackgroundPanel("/img/campo-batalla.png");
         panelCampoBatalla.setPreferredSize(new Dimension(900, 350));
-        panelCampoBatalla.setBackground(new Color(220, 220, 220));
         panelCampoBatalla.setBorder(BorderFactory.createTitledBorder("Campo de batalla"));
         panelCampoBatalla.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 30));
         panelCentral.add(panelCampoBatalla, BorderLayout.NORTH);
 
-        // Consola
+        // ======= CONSOLA =======
         areaTexto = new JTextArea();
         areaTexto.setEditable(false);
-        areaTexto.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        areaTexto.setBackground(new Color(245, 245, 235));
+        areaTexto.setFont(new Font("Consolas", Font.PLAIN, 15));
+        areaTexto.setBackground(new Color(250, 250, 245));
+        areaTexto.setForeground(new Color(60, 60, 60));
+        areaTexto.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JScrollPane scroll = new JScrollPane(areaTexto);
         scroll.setPreferredSize(new Dimension(900, 180));
-        scroll.setBorder(BorderFactory.createTitledBorder("Registro de batalla"));
+        scroll.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(180, 180, 180), 2, true),
+                "Registro de batalla"));
 
         JPanel panelConsola = new JPanel(new BorderLayout());
+        panelConsola.setBackground(new Color(240, 240, 240));
         panelConsola.add(scroll, BorderLayout.CENTER);
 
         panelCentral.add(panelConsola, BorderLayout.SOUTH);
-
         add(panelCentral, BorderLayout.CENTER);
 
-        // Panel derecho
+        // ======= PANEL DERECHO =======
         JPanel panelDerecho = new JPanel();
         panelDerecho.setLayout(new GridLayout(10, 1, 5, 10));
         panelDerecho.setPreferredSize(new Dimension(180, 600));
-        panelDerecho.setBorder(BorderFactory.createTitledBorder("Opciones"));
+        panelDerecho.setBackground(new Color(245, 245, 245));
+        panelDerecho.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(160, 160, 160), 2, true),
+                "Opciones"));
 
-        btnDeshacer = new JButton("DESHACER");
-        btnRehacer = new JButton("REHACER");
-        btnGuardar = new JButton("GUARDAR");
-        JButton btnSalir = new JButton("SALIR");
+        // Botones del panel derecho
+        btnDeshacer = crearBotonSecundario("DESHACER");
+        btnRehacer = crearBotonSecundario("REHACER");
+        btnGuardar = crearBotonSecundario("GUARDAR");
+        JButton btnSalir = crearBotonPeligro("SALIR");
 
         panelDerecho.add(btnDeshacer);
         panelDerecho.add(btnRehacer);
@@ -130,15 +214,19 @@ public class InterfazJuego extends JFrame {
 
         add(panelDerecho, BorderLayout.EAST);
 
-        // Panel de acciones
+        // ======= PANEL DE ACCIONES =======
         JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
         panelAcciones.setPreferredSize(new Dimension(900, 80));
-        panelAcciones.setBorder(BorderFactory.createTitledBorder("Acciones"));
+        panelAcciones.setBackground(new Color(250, 250, 250));
+        panelAcciones.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(180, 180, 180), 2, true),
+                "Acciones"));
 
-        btnAtacar = new JButton("ATACAR");
-        btnDefender = new JButton("DEFENDER");
-        btnHabilidad = new JButton("HABILIDAD");
-        btnObjeto = new JButton("OBJETO");
+        // Botones principales
+        btnAtacar = crearBotonPrincipal("ATACAR");
+        btnDefender = crearBotonPrincipal("DEFENDER");
+        btnHabilidad = crearBotonPrincipal("HABILIDAD");
+        btnObjeto = crearBotonPrincipal("OBJETO");
 
         panelAcciones.add(btnAtacar);
         panelAcciones.add(btnDefender);
@@ -147,7 +235,7 @@ public class InterfazJuego extends JFrame {
 
         add(panelAcciones, BorderLayout.SOUTH);
 
-        // Eventos
+        // ======= EVENTOS =======
         btnAtacar.addActionListener(e -> realizarAtaque(false));
         btnHabilidad.addActionListener(e -> realizarAtaque(true));
         btnDefender.addActionListener(e -> manejarDefensa());
@@ -155,7 +243,23 @@ public class InterfazJuego extends JFrame {
         btnDeshacer.addActionListener(e -> manejarDeshacer());
         btnRehacer.addActionListener(e -> manejarRehacer());
         btnGuardar.addActionListener(e -> guardarPartida());
-        btnSalir.addActionListener(e -> dispose());
+
+        btnSalir.addActionListener(e -> {
+            int op = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Quieres guardar antes de salir?",
+                    "Guardar y salir",
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+
+            if (op == JOptionPane.CANCEL_OPTION)
+                return;
+            if (op == JOptionPane.YES_OPTION)
+                guardarPartida();
+
+            detenerMusica();
+            System.exit(0);
+        });
+
     }
 
     // BOTONES ENEMIGOS
@@ -172,8 +276,23 @@ public class InterfazJuego extends JFrame {
                 enemigosVivos.add(e);
                 final int index = idxVisible;
 
-                JButton btn = new JButton("<html>" + e.getNombre() +
-                        "<br>HP: " + e.getHp() + "</html>");
+                String ruta = obtenerRutaImagenEnemigo(e.getTipoEnemigo());
+
+                ImageIcon icono = null;
+                try {
+                    icono = new ImageIcon(getClass().getResource(ruta));
+
+                    Image imagenEscalada = icono.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                    icono = new ImageIcon(imagenEscalada);
+                } catch (Exception ex) {
+                    System.err.println("Error al cargar imagen para " + e.getNombre() + ": " + ex.getMessage());
+                }
+
+                JButton btn = new JButton("<html>HP: " + e.getHp() + "</html>", icono);
+
+                btn.setVerticalTextPosition(SwingConstants.BOTTOM);
+                btn.setHorizontalTextPosition(SwingConstants.CENTER);
+
                 btn.setPreferredSize(new Dimension(130, 130));
 
                 btn.addActionListener(ev -> listaEnemigos.setSelectedIndex(index));
@@ -189,12 +308,28 @@ public class InterfazJuego extends JFrame {
         panelCampoBatalla.repaint();
     }
 
+    private String obtenerRutaImagenEnemigo(TipoEnemigo tipo) {
+        switch (tipo) {
+            case SPIKED_HARE:
+                return "/img/skiped.png";
+            case VENOM_SLIME:
+                return "/img/slime.png";
+            case PATYPUNK:
+                return "/img/paty-punk.png";
+            case TERROR_TABBY:
+                return "/img/terror.png";
+            default:
+                return "/img/default.png";
+        }
+    }
+
     // GUARDAR PARTIDA
     private void guardarPartida() {
 
         String nombre = JOptionPane.showInputDialog(this, "Nombre para el guardado:");
 
-        if (nombre == null || nombre.trim().isEmpty()) return;
+        if (nombre == null || nombre.trim().isEmpty())
+            return;
 
         try {
             GuardarPartida.guardar(controlador, indiceHeroeActual, nombre.trim());
@@ -309,7 +444,8 @@ public class InterfazJuego extends JFrame {
         String r = controlador.rehacerAccion();
         areaTexto.append(r);
 
-        if (r.toLowerCase().contains("no hay accion")) return;
+        if (r.toLowerCase().contains("no hay accion"))
+            return;
 
         actualizarListaEnemigos();
         actualizarBotonesEnemigos();
@@ -343,10 +479,12 @@ public class InterfazJuego extends JFrame {
                 indiceHeroeActual = 0;
             }
 
-            if (heroes.get(indiceHeroeActual).estaVivo()) break;
+            if (heroes.get(indiceHeroeActual).estaVivo())
+                break;
 
             intentos++;
-            if (intentos > heroes.size()) break;
+            if (intentos > heroes.size())
+                break;
         }
 
         actualizarListaEnemigos();
@@ -408,6 +546,7 @@ public class InterfazJuego extends JFrame {
         JButton volver = new JButton("Volver al menu principal");
         volver.addActionListener(e -> {
             new MenuPrincipal().setVisible(true);
+            detenerMusica();
             dispose();
         });
 

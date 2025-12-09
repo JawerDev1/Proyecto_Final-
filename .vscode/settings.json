@@ -1,7 +1,19 @@
 {
-    "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar"
+    ],
+    // Esto es para la extensión Java de Red Hat/Microsoft
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    // Esta línea es crucial para incluir recursos no-Java
+    "java.project.resource-mapping": [
+        {
+            // Mapea la carpeta 'music' dentro de 'src'
+            "source": "src/music", 
+            // Indica que debe ir a la raíz del Classpath ("/")
+            "target": "/" 
+        }
     ]
 }

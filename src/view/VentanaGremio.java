@@ -15,25 +15,57 @@ public class VentanaGremio extends JFrame {
     public VentanaGremio() {
 
         setTitle("Gremio de Aventureros");
-        setSize(600, 450);
+        setSize(650, 520);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
 
+        // ===== FONDO GENERAL =====
+        BackgroundPanel fondo = new BackgroundPanel("/img/gremio.png"); // Ajusta la ruta si es necesario
+        fondo.setLayout(new BorderLayout());
+        setContentPane(fondo);
+
+        // ===== TÍTULO PRINCIPAL =====
+        JLabel titulo = new JLabel("GREMIO DE AVENTUREROS");
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titulo.setForeground(Color.WHITE);
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+
+        add(titulo, BorderLayout.NORTH);
+
+        // ===== ÁREA DE TEXTO =====
         areaTexto = new JTextArea();
         areaTexto.setEditable(false);
-        areaTexto.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        areaTexto.setFont(new Font("Consolas", Font.PLAIN, 15));
+        areaTexto.setForeground(Color.WHITE);
+        areaTexto.setOpaque(false);
+
         JScrollPane scroll = new JScrollPane(areaTexto);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+
+        scroll.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(255, 255, 255, 180), 2, true),
+                "Registro del Gremio",
+                0, 0,
+                new Font("Segoe UI", Font.BOLD, 14),
+                Color.WHITE
+        ));
+
+        scroll.setPreferredSize(new Dimension(580, 300));
         add(scroll, BorderLayout.CENTER);
 
-        JPanel panelBotones = new JPanel(new GridLayout(3, 2, 10, 10));
+        // ===== PANEL DE BOTONES (semitransparente) =====
+        JPanel panelBotones = new JPanel(new GridLayout(3, 2, 12, 12));
+        panelBotones.setOpaque(false);
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JButton btnRegistrar = new JButton("Registrar aventurero");
-        JButton btnAtender = new JButton("Atender siguiente");
-        JButton btnVerSiguiente = new JButton("Ver siguiente");
-        JButton btnVerCola = new JButton("Ver cola completa");
-        JButton btnVaciar = new JButton("Vaciar cola");
-        JButton btnSalir = new JButton("Cerrar");
+        JButton btnRegistrar    = crearBotonPrimario("Registrar Aventurero");
+        JButton btnAtender      = crearBotonSecundario("Atender Siguiente");
+        JButton btnVerSiguiente = crearBotonSecundario("Ver Siguiente");
+        JButton btnVerCola      = crearBotonSecundario("Ver Cola Completa");
+        JButton btnVaciar       = crearBotonPeligro("Vaciar Cola");
+        JButton btnSalir        = crearBotonPeligro("Cerrar");
 
         panelBotones.add(btnRegistrar);
         panelBotones.add(btnAtender);
@@ -44,6 +76,7 @@ public class VentanaGremio extends JFrame {
 
         add(panelBotones, BorderLayout.SOUTH);
 
+        // ===== EVENTOS =====
         btnRegistrar.addActionListener(e -> registrarAventurero());
         btnAtender.addActionListener(e -> atenderSiguiente());
         btnVerSiguiente.addActionListener(e -> mostrarSiguiente());
@@ -51,6 +84,75 @@ public class VentanaGremio extends JFrame {
         btnVaciar.addActionListener(e -> vaciarCola());
         btnSalir.addActionListener(e -> dispose());
     }
+
+    // ============================================
+    //        BOTONES ESTILIZADOS
+    // ============================================
+
+    private JButton crearBotonPrimario(String texto) {
+        JButton btn = new JButton(texto);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setBackground(new Color(50, 120, 220, 230));
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btn.setOpaque(true);
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(30, 100, 200, 230));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(50, 120, 220, 230));
+            }
+        });
+
+        return btn;
+    }
+
+    private JButton crearBotonSecundario(String texto) {
+        JButton btn = new JButton(texto);
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        btn.setBackground(new Color(255, 255, 255, 180));
+        btn.setForeground(Color.BLACK);
+        btn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btn.setFocusPainted(false);
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(240, 240, 240, 180));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(255, 255, 255, 180));
+            }
+        });
+
+        return btn;
+    }
+
+    private JButton crearBotonPeligro(String texto) {
+        JButton btn = new JButton(texto);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setBackground(new Color(200, 40, 40, 230));
+        btn.setForeground(Color.WHITE);
+        btn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btn.setFocusPainted(false);
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(170, 25, 25, 230));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(200, 40, 40, 230));
+            }
+        });
+
+        return btn;
+    }
+
+    // ===================================
+    //        LÓGICA DEL GREMIO
+    // ===================================
 
     private void registrarAventurero() {
         JTextField nombreField = new JTextField();
@@ -61,7 +163,7 @@ public class VentanaGremio extends JFrame {
                 "Nivel del aventurero:", nivelField
         };
 
-        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Registrar aventurero",
+        int opcion = JOptionPane.showConfirmDialog(this, mensaje, "Registrar Aventurero",
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (opcion == JOptionPane.OK_OPTION) {
@@ -70,7 +172,7 @@ public class VentanaGremio extends JFrame {
                 int nivel = Integer.parseInt(nivelField.getText().trim());
 
                 if (nombre.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "El nombre no puede estar vacio.");
+                    JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.");
                     return;
                 }
 
@@ -80,7 +182,7 @@ public class VentanaGremio extends JFrame {
                 areaTexto.append("Registrado: " + av + "\n");
 
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Nivel invalido.");
+                JOptionPane.showMessageDialog(this, "Nivel inválido.");
             }
         }
     }
@@ -107,7 +209,7 @@ public class VentanaGremio extends JFrame {
 
     private void mostrarCola() {
         if (colaAventureros.isEmpty()) {
-            areaTexto.append("La cola esta vacia.\n");
+            areaTexto.append("La cola está vacía.\n");
         } else {
             areaTexto.append("Aventureros en espera:\n");
             for (Aventurero av : colaAventureros) {
