@@ -5,99 +5,142 @@ import utils.GuardarPartida;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 public class MenuPrincipal extends JFrame {
 
+    private int indiceSeleccionado = 0;
+    private String[] opciones = {
+            "Iniciar Batalla",
+            "Cargar Partida",
+            "Historial de Batallas",
+            "Gremio de Aventureros",
+            "Salir"
+    };
+
     public MenuPrincipal() {
 
+        // ================================================
+        // CONFIGURACIÓN DE LA VENTANA
+        // ================================================
         setTitle("DRAGON QUEST");
-        setSize(600, 450);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(600, 520);
         setLocationRelativeTo(null);
         setResizable(false);
-        getContentPane().setBackground(new Color(25, 25, 112));
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        inicializarComponentes();
+
+        BackgroundPanel fondo = new BackgroundPanel("img/menu1.jpg");
+        setContentPane(fondo);
+
+
+        MenuPanel menuPanel = new MenuPanel();
+        menuPanel.setOpaque(false);
+        setLayout(null);
+
+        menuPanel.setBounds(180, 120, 350, 300); 
+        add(menuPanel);
+
+        configurarControles(menuPanel);
+
+        setVisible(true);
     }
 
-    private void inicializarComponentes() {
+    // ================================================
+    // PANEL QUE DIBUJA EL MENÚ TIPO MARIO
+    // ================================================
+    private class MenuPanel extends JPanel {
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        panel.setBackground(new Color(25, 25, 112));
-        add(panel);
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(15, 15, 15, 15);
+            g.setFont(new Font("Press Start 2P", Font.PLAIN, 22));
 
-        JLabel titulo = new JLabel("DRAGON QUEST");
-        titulo.setFont(new Font("Serif", Font.BOLD, 32));
-        titulo.setForeground(Color.WHITE);
+            for (int i = 0; i < opciones.length; i++) {
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(titulo, gbc);
+                int y = 40 + (i * 50);
 
-        JButton btnIniciar = new JButton("Iniciar Batalla");
-        btnIniciar.setPreferredSize(new Dimension(230, 45));
-        btnIniciar.setBackground(new Color(72, 61, 139));
-        btnIniciar.setForeground(Color.WHITE);
+                // Sombra negra
+                g.setColor(Color.BLACK);
+                g.drawString(opciones[i], 42, y + 2);
 
-        gbc.gridy = 1;
-        panel.add(btnIniciar, gbc);
+                // Texto principal
+                if (i == indiceSeleccionado)
+                    g.setColor(Color.YELLOW);
+                else
+                    g.setColor(Color.WHITE);
 
-        JButton btnCargar = new JButton("Cargar Partida");
-        btnCargar.setPreferredSize(new Dimension(230, 45));
-        btnCargar.setBackground(new Color(72, 61, 139));
-        btnCargar.setForeground(Color.WHITE);
+                g.drawString(opciones[i], 40, y);
+            }
 
-        gbc.gridy = 2;
-        panel.add(btnCargar, gbc);
+        }
+    }
 
-        JButton btnHistorial = new JButton("Historial de Batallas");
-        btnHistorial.setPreferredSize(new Dimension(230, 45));
-        btnHistorial.setBackground(new Color(72, 61, 139));
-        btnHistorial.setForeground(Color.WHITE);
+    // ================================================
+    // CONTROLES DEL MENU CON LAS FLECHAS
+    // ================================================
+    private void configurarControles(JPanel panel) {
 
-        gbc.gridy = 3;
-        panel.add(btnHistorial, gbc);
+        panel.setFocusable(true);
+        panel.requestFocusInWindow();
 
-        JButton btnGremio = new JButton("Gremio de Aventureros");
-        btnGremio.setPreferredSize(new Dimension(230, 45));
-        btnGremio.setBackground(new Color(72, 61, 139));
-        btnGremio.setForeground(Color.WHITE);
+        panel.addKeyListener(new java.awt.event.KeyAdapter() {
 
-        gbc.gridy = 4;
-        panel.add(btnGremio, gbc);
+            @Override
+            public void keyPressed(KeyEvent e) {
 
-        JButton btnSalir = new JButton("Salir");
-        btnSalir.setPreferredSize(new Dimension(230, 45));
-        btnSalir.setBackground(new Color(72, 61, 139));
-        btnSalir.setForeground(Color.WHITE);
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    indiceSeleccionado = (indiceSeleccionado + 1) % opciones.length;
+                    panel.repaint();
+                }
 
-        gbc.gridy = 5;
-        panel.add(btnSalir, gbc);
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    indiceSeleccionado = (indiceSeleccionado - 1 + opciones.length) % opciones.length;
+                    panel.repaint();
+                }
 
-        // Nueva partida
-        btnIniciar.addActionListener(e -> {
-            new InterfazJuego().setVisible(true);
-            dispose();
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    ejecutarOpcion();
+                }
+            }
         });
-
-        // Cargar partida
-        btnCargar.addActionListener(e -> mostrarVentanaCargar());
-
-        // Historial
-        btnHistorial.addActionListener(e -> new VentanaHistorial().setVisible(true));
-
-        // Gremio
-        btnGremio.addActionListener(e -> new VentanaGremio().setVisible(true));
-
-        // Salir
-        btnSalir.addActionListener(e -> System.exit(0));
     }
 
+    // ================================================
+    // ACCIONES DEL MENU
+    // ================================================
+    private void ejecutarOpcion() {
+
+        switch (indiceSeleccionado) {
+
+            case 0:
+                new InterfazJuego().setVisible(true);
+                dispose();
+                break;
+
+            case 1:
+                mostrarVentanaCargar();
+                break;
+
+            case 2:
+                new VentanaHistorial().setVisible(true);
+                break;
+
+            case 3:
+                new VentanaGremio().setVisible(true);
+                break;
+
+            case 4:
+                System.exit(0);
+                break;
+        }
+    }
+
+    // ================================================
+    // CARGAR PARTIDA (NO SE TOCA)
+    // ================================================
     private void mostrarVentanaCargar() {
 
         JDialog d = new JDialog(this, "Cargar Partida", true);
@@ -108,15 +151,13 @@ public class MenuPrincipal extends JFrame {
         JList<String> lista = new JList<>(modelo);
 
         File carpeta = new File(GuardarPartida.RUTA_CARPETA);
-        if (!carpeta.exists()) {
+        if (!carpeta.exists())
             carpeta.mkdirs();
-        }
 
         File[] archivos = carpeta.listFiles((dir, name) -> name.endsWith(".sav"));
         if (archivos != null) {
-            for (File f : archivos) {
+            for (File f : archivos)
                 modelo.addElement(f.getName());
-            }
         }
 
         d.add(new JScrollPane(lista), BorderLayout.CENTER);
@@ -127,25 +168,20 @@ public class MenuPrincipal extends JFrame {
         JPanel p = new JPanel();
         p.add(btnCargar);
         p.add(btnCancelar);
-
         d.add(p, BorderLayout.SOUTH);
 
         btnCargar.addActionListener(e -> {
+
             String seleccionado = lista.getSelectedValue();
             if (seleccionado == null) {
-                JOptionPane.showMessageDialog(d,
-                        "Selecciona una partida.",
-                        "Advertencia",
-                        JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(d, "Selecciona una partida.");
                 return;
             }
 
             GuardarPartida.PartidaCargada partida = GuardarPartida.cargar(seleccionado);
+
             if (partida == null) {
-                JOptionPane.showMessageDialog(d,
-                        "No se pudo cargar la partida.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(d, "Error al cargar partida.");
                 return;
             }
 
